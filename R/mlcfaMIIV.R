@@ -25,11 +25,86 @@ mlcfaMIIV <- function(withinModel,
                       l2Var,
                       df,
                       var.cov = FALSE) {
-  # Program some checks, like is long a DF, fitWith =nlme or lmer,
-  # all indicators is charater, etc.
+  # ---------------------------------------------------------------------------
+  # there has to be a better way to parse through the model for variables
+
+  # ---------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
+  # check if all indicators matches the df
+  if(!all(allIndicators %in% names(df))) {
+    stop("allIndicators do no match variable names in DF")
+  }
+  if(!(l1Var %in% names(df))){
+    stop("l1Var not in DF")
+  }
+  if(!(l2Var %in% names(df))){
+    stop("l2Var not in DF")
+  }
+  if(tolower(estimator)!="muthen|goldstein"){
+    stop("estimator argument not recognized")
+  }
 
   # -----------------------------------------------------------------
-  # Do some universal steps
+  # # this is lifted straight from MIIVsem for parsing the model...
+  # # I need to go through and see if it works with my current setup
+  # #-------------------------------------------------------#
+  # # Check class of model.
+  # #-------------------------------------------------------#
+  # if ( "miivs" == class(model) ){
+  #
+  #   d  <- model$eqns
+  #   pt <- model$pt
+  #
+  # } else {
+  #
+  #   res <- miivs(model)
+  #   d   <- res$eqns
+  #   pt  <- res$pt
+  #
+  # }
+  #
+  # #-------------------------------------------------------#
+  # # parseInstrumentSyntax
+  # #-------------------------------------------------------#
+  # d  <- parseInstrumentSyntax(d, instruments, miiv.check)
+  #
+  # #-------------------------------------------------------#
+  # # remove equations where there are not sufficient MIIVs
+  # #-------------------------------------------------------#
+  # underid   <- unlist(lapply(d, function(eq) {
+  #   length(eq$MIIVs) < length(eq$IVobs)
+  # }))
+  # d.un <- d[underid]; d   <- d[!underid]
+  #
+  # #-------------------------------------------------------#
+  # # Remove variables from data that are not in model
+  # # syntax and preserve the original column ordering.
+  # #-------------------------------------------------------#
+  # if(!is.null(data)){
+  #
+  #   obs.vars <- unique(unlist(lapply(d,"[", c("DVobs", "IVobs", "MIIVs"))))
+  #
+  #   if (any(!obs.vars %in% colnames(data))){
+  #    stop(paste(
+  #      "miive: model syntax contains variables not in data.")
+  #    )
+  #   }
+  #
+  #   data <- data[,colnames(data) %in% obs.vars]
+  #   data <- as.data.frame(data)
+  #
+  #   # convert any variables listed in
+  #   # ordered to categorical
+  #   data[,ordered]  <- lapply(
+  #     data[,ordered, drop = FALSE], ordered
+  #   )
+  # }
+
+
+  # -----------------------------------------------------------------
+  # Trimming the df, saving the number of subjects and groups
+  # -----------------------------------------------------------------
+  df <- df[c(l2Var, l1Var, allIndicators)]
   # number of subjects
   n <- nrow(df)
   # number of groups
