@@ -40,7 +40,7 @@ mlcfaMIIV <- function(withinModel,
   if(!(l2Var %in% names(df))){
     stop("l2Var not in DF")
   }
-  if(tolower(estimator)!="muthen|goldstein"){
+  if(!grepl(estimator, "muthen|goldstein", ignore.case = TRUE)){
     stop("estimator argument not recognized")
   }
 

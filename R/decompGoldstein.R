@@ -37,7 +37,7 @@ decompGoldstein <- function(allIndicators,
     # Create the model and random statements
     form <- paste(i1, i2 , sep = "+" )
     model <- as.formula(paste0("value~ -1 +", form))
-    ranef <- as.formula(paste("~-1 + ", form, "|cluster/id"))
+    ranef <- as.formula(paste("~-1 + ", form, "|", l2Var, "/", l1Var))
     # subset the rows we want
     subset <- dplyr::filter(.data = long, item %in% c(i1, i2))
     # Try catch incase models do not converge
